@@ -7,28 +7,256 @@
     stroke-opacity: 0.6;
 }
 
-.nodes circle {
-    stroke: #fff;
-    stroke-width: 1.5px;
-}
-
 text {
     font-family: sans-serif;
-    font-size: 10px;
+    font-size: 11px;
+}
+
+.ui-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  display: none;
+  min-width: 160px;
+  _width: 160px;
+  padding: 4px 0;
+  margin: 2px 0 0 0;
+  list-style: none;
+  background-color: #ffffff;
+  border-color: #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+}
+
+.ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+}
+
+.ui-state-hover, .ui-state-active {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #0088cc;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    background-image: none;
 }
     
 </style>
-<svg width="2048" height="1024"></svg>
+<form action="javascript:draw(this.node.value)" method="post" class="form">
+    <div>
+        <label for="node">Node, entrypoint or exitpoint name: </label>
+        <input type="text" name="node" id="node" style="width: 500px;" required>
+        <input type="submit" value="Draw it!">
+    </div>
+</form>
+<p></p>
+<svg width="100" height="100"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
 
 <script>
 
 var graph = {
-    nodes: [],
-    links: []
+    nodes: new Map()
 }
 
+var coords = new Array(100).fill(0);
+
+var min = 0;
+var norm = 0
+
+const colors = {
+    KEEP: "#aed6f1",
+    DELETE: "#f5b7b1",
+    VALIDATE: "#eaeded",
+    FIX: "#f9e79f"
+}
+
+const dist_h = 300
+const dist_v = 100
+const node_width = 200
+const node_height = 40
+const radio = 12
+
+function draw(name) {
+    // Initialise global variables
+    coords = new Array(100).fill(0)
+    min = 0
+    norm = 0
+
+    $("svg").html("")
+
+    var node_filter = name
+
+    var nodes = new Map()
+
+    // Fetch source nodes
+    getFrom(graph.nodes, node_filter, nodes, -1)
+
+    // Set current node into map
+    var current_node = graph.nodes.get(node_filter)
+    current_node.x = 0
+    current_node.y = 0
+    nodes.set(node_filter, current_node)
+
+    // Fetch target nodes
+    getTo(graph.nodes, node_filter, nodes, 1)
+
+    // Normalise negative min value when there are many source nodes
+    norm = Math.abs(min)
+
+    // Compute links coordinates
+    var links = getLinks(nodes)
+
+    // Compute svg dimensions
+    var n_horizontal_nodes = coords.filter(function(value) {return value !== 0}).length
+    var n_vertical_nodes = Math.max(...coords)
+
+    $("svg").attr("width", n_horizontal_nodes * dist_h + node_width)
+    $("svg").attr("height", n_vertical_nodes * dist_v + node_height)
+
+    // Initialise svg object
+    var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    // Define arrowhead
+    svg.append("svg:defs").append("svg:marker")
+        .attr("id", "arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 10)
+        .attr("refY", 0)
+        .attr("markerWidth", 4)
+        .attr("markerHeight", 4)
+        .attr("orient", "auto")
+        .attr("class", "links")
+        .append("path")
+            .attr("d", "M0, -5L10, 0L0, 5")
+            .style("stroke", "black");
+        
+    // Draw links
+    var link = svg.append("g")
+        .attr("class", "links")
+        .selectAll("line")
+        .data(links)
+        .enter().append("line")
+        .attr("x1", function(d){return d.x1;})
+        .attr("x2", function(d){return d.x2;})
+        .attr("y1", function(d){return d.y1;})
+        .attr("y2", function(d){return d.y2;})
+        .attr("stroke-width", 2)
+        .attr("marker-end", "url(#arrow)");
+
+    // Extract an array from nodes map
+    var nodes_array = Array.from(nodes.values())
+
+    // Draw nodes
+    var node = svg.append("g")
+        .selectAll("g")
+        .data(nodes_array.filter(function(node) {return node.type === "Node"}))
+        .enter().append("g")
+
+    var square = node.append("rect")
+        .attr("x", function(d) {return ((d.x + norm) * dist_h);})
+        .attr("y", function(d) {return (d.y * dist_v);})
+        .attr("width", node_width)
+        .attr("height", node_height)
+        .attr("stroke", function(d) {if (d.id == name) return "black"})
+        .attr("stroke-width", function(d) {if (d.id == name) return 2.5})
+        .attr("fill", function(d) { return d.color; })
+        .on("click", function(d) {draw(d.id)})
+
+    var labels = node.append("text")
+        .text(function(d) {return d.id;})
+        .attr('x', function(d) {return ((d.x + norm) * dist_h) + 5;})
+        .attr('y', function(d) {return (d.y * dist_v) + (node_height / 2) + 5;});
+
+    var sources = node.append("text")
+        .text(function(d) {return d.n_sources;})
+        .attr('x', function(d) {return ((d.x + norm) * dist_h) + 5;})
+        .attr('y', function(d) {return (d.y * dist_v) + 11;});
+
+    var targets = node.append("text")
+        .text(function(d) {return d.n_targets;})
+        .attr('x', function(d) {return ((d.x + norm) * dist_h) + (node_width - 15);})
+        .attr('y', function(d) {return (d.y * dist_v) + (node_height - 5);});
+
+    // Draw entrypoints
+    var entrypoint = svg.append("g")
+        .selectAll("g")
+        .data(nodes_array.filter(function(node) {return node.type === "Entrypoint"}))
+        .enter().append("g")
+
+    var circle_entry = entrypoint.append("circle")
+        .attr("cx", function(d) {return ((d.x + norm) * dist_h) + (node_width - radio);})
+        .attr("cy", function(d) {return (d.y * dist_v) + (node_height/2);})
+        .attr("r", radio)
+        .attr("stroke", function(d) {if (d.id == name) return "black"})
+        .attr("stroke-width", function(d) {if (d.id == name) return 2.5})
+        .attr("fill", function(d) { return d.color; })
+        .on("click", function(d) {draw(d.id)})
+
+    var labels = entrypoint.append("text")
+        .text(function(d) {return d.id;})
+        .attr('x', function(d) {return ((d.x + norm) * dist_h) + 5;})
+        .attr('y', function(d) {return (d.y * dist_v) + (node_height);});
+
+    var targets = entrypoint.append("text")
+        .text(function(d) {return d.n_targets;})
+        .attr('x', function(d) {return ((d.x + norm) * dist_h) + (node_width - radio - 5);})
+        .attr('y', function(d) {return (d.y * dist_v) + (node_height/2) + 2;});
+
+    // Draw exitpoints
+    var exitpoint = svg.append("g")
+        .selectAll("g")
+        .data(nodes_array.filter(function(node) {return node.type === "Exitpoint"}))
+        .enter().append("g")
+
+    var circle_exit = exitpoint.append("circle")
+        .attr("cx", function(d) {return ((d.x + norm) * dist_h) + radio;})
+        .attr("cy", function(d) {return (d.y * dist_v) + (node_height/2);})
+        .attr("r", radio)
+        .attr("stroke", function(d) {if (d.id == name) return "black"})
+        .attr("stroke-width", function(d) {if (d.id == name) return 2.5})
+        .attr("fill", function(d) { return d.color; })
+        .on("click", function(d) {draw(d.id)})
+
+    var labels = exitpoint.append("text")
+        .text(function(d) {return d.id;})
+        .attr('x', function(d) {return ((d.x + norm) * dist_h) + 5 + radio*2;})
+        .attr('y', function(d) {return (d.y * dist_v) + (node_height / 2) + 5;});
+
+    var sources = exitpoint.append("text")
+        .text(function(d) {return d.n_sources;})
+        .attr('x', function(d) {return ((d.x + norm) * dist_h) + (radio - 5);})
+        .attr('y', function(d) {return (d.y * dist_v) + (node_height/2) + 2;});
+}
+
+// Load csv file
 $(document).ready(function(){
     $.ajax({
         type: "GET" ,
@@ -39,170 +267,163 @@ $(document).ready(function(){
             var lines = csv.split(/\r\n|\n/)
             var header = lines[0].split(';')
 
+            // For each line
             for (var i=1; i<lines.length; i++) {
                 var entries = lines[i].split(';')
-                graph.nodes.push(create_node(entries[0], entries[1]))
-                for (var j=3; j<entries.length; j+=2) {
-                    graph.links.push(create_link(entries[1], entries[j]))
+
+                if (entries.length > 1) {
+                    // Fetch target nodes from current line
+                    var targets = []
+                    for (var j=4; j<entries.length; j+=2) {
+                        if (entries[j] !== "") {
+                            targets.push(entries[j])
+                        }
+                    }
+
+                    // Create node with line information and without coordinates
+                    graph.nodes.set(entries[2], createNode(entries[2], entries[0], targets, entries[1]))
                 }
             }
 
-            var node_filter = "datastoreDelete"
-            var res = []
+            // Computes number of source and target nodes for each node
+            graph.nodes.forEach(function(value, key) {
+                value.n_targets = value.targets.length
+                var n_sources = 0
+                graph.nodes.forEach(function(t_value, t_key) {
+                    if ($.inArray(key, t_value.targets) !== -1) n_sources++
+                });
+                value.n_sources = n_sources
+            });
 
-
-            get_from(graph.links, node_filter, res)
-
-            get_to(graph.links, node_filter, res)
-
-            var nodes = get_nodes(graph.nodes, res)
-
-            console.log(nodes)
-
-            graph.nodes = nodes
-            graph.links = res
-
-            var svg = d3.select("svg"),
-            width = +svg.attr("width"),
-            height = +svg.attr("height");
-
-            var color = d3.scaleOrdinal(d3.schemeCategory20);
-
-            var simulation = d3.forceSimulation()
-                .force("link", d3.forceLink().id(function(d) { return d.id; }))
-                .force("charge", d3.forceManyBody())
-                .force("center", d3.forceCenter(width / 2, height / 2));
-
-
-            var link = svg.append("g")
-                .attr("class", "links")
-                .selectAll("line")
-                .data(graph.links)
-                .enter().append("line")
-                .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
-
-            var node = svg.append("g")
-                .attr("class", "nodes")
-                .selectAll("g")
-                .data(graph.nodes)
-                .enter().append("g")
-
-            var circles = node.append("circle")
-                .attr("r", 10)
-                .attr("fill", function(d) { return color(d.group); })
-                .call(d3.drag()
-                    .on("start", dragstarted)
-                    .on("drag", dragged)
-                    .on("end", dragended));
-
-            var labels = node.append("text")
-                .text(function(d) {
-                    return d.id;
-                })
-                .attr('x', 10)
-                .attr('y', 3);
-
-            node.append("title")
-                .text(function(d) { return d.id; });
-
-            simulation
-                .nodes(graph.nodes)
-                .on("tick", ticked);
-
-            simulation.force("link")
-                .links(graph.links);
-
-                function ticked() {
-            link
-                .attr("x1", function(d) { return d.source.x; })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; });
-
-            node
-                .attr("transform", function(d) {
-                return "translate(" + d.x + "," + d.y + ")";
-                })
-            }
-
-            function dragstarted(d) {
-                if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x;
-                d.fy = d.y;
-            }
-
-            function dragged(d) {
-                d.fx = d3.event.x;
-                d.fy = d3.event.y;
-            }
-
-            function dragended(d) {
-                if (!d3.event.active) simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
-            }  
+            // Add autocomplete to input field
+            $('#node').autocomplete({
+                source: Array.from(graph.nodes.keys()),
+                minLength: 3,
+                select: function(event, ui) { draw(ui.item.value) }
+            });
         }       
     });
 
+    $('#node').focus(function() { $(this).select(); } );
 });
 
-function create_node(node_type, node_id) {
-    var node = {
-        type: node_type,
-        id: node_id,
-        group: node_type.length
+
+/**
+* Creates a new link object and computes its coordinates from source and target nodes
+*/
+function createLink(x1, y1, x2, y2, target_type) {
+    // Source is at rigth or at the same level than target
+    if (x1 > x2 || x1 == x2) {
+        // Source is under target
+        if (y1 > y2) {
+            x1 = ((x1 + norm) * dist_h) + (node_width / 2);
+            y1 = (y1 * dist_v);
+            x2 = (x2 + norm) * dist_h + (node_width / 2);
+            y2 = (y2 * dist_v) + node_height;
+        } 
+        // Source and target are at the same level
+        else if (y1 == y2) {
+            x1 = ((x1 + norm) * dist_h);
+            y1 = (y1 * dist_v) + (node_height / 2);
+            x2 = (x2 + norm) * dist_h + node_width;
+            y2 = (y2 * dist_v) + (node_height / 2);
+        }
+        // Source is over target
+        else if (y1 < y2) {
+            x1 = ((x1 + norm) * dist_h) + (node_width / 2);
+            y1 = (y1 * dist_v) + node_height;
+            x2 = (x2 + norm) * dist_h + (node_width / 2);
+            y2 = (y2 * dist_v);
+        }
+
+        // Exitpoints are smaller, we need to adjust target coordinates
+        if (target_type == "Exitpoint") {
+            x2 -= (node_width/2) - radio*2
+            y2 -= (node_height/2) - radio/2
+        }
+    } 
+    // Source is at left
+    else {
+        x1 = ((x1 + norm) * dist_h) + node_width;
+        x2 = (x2 + norm) * dist_h;
+        y1 = (y1 * dist_v) + (node_height / 2);
+        y2 = (y2 * dist_v) + (node_height / 2);
     }
 
-    return node
-}
-
-function create_link(s, t) {
-    var link = {
-        source: s,
-        target: t,
-        value: 2
+    return link = {
+        x1: x1,
+        y1: y1,
+        x2: x2,
+        y2: y2
     }
-
-    return link
 }
 
-function get_from(links, node_name, arr) {
-    links.forEach(function(l, i) {
-        if (l.target === node_name) {
-            arr.push(l)       
-            if (l.source !== undefined) {
-                get_from(links, l.source, arr)
-            }
+/**
+* Creates a new node object with coordinates
+*/
+function createNode(id, type, targets, status) {
+    return {
+        type: type,
+        id: id,
+        color: $(colors).attr(status),
+        x: null,
+        y: null,        
+        targets: targets,
+        n_targets: null,
+        n_sources: null
+    }
+}
+
+/**
+* Computes recursively all source nodes from current node until first node in graph
+*/
+function getFrom(nodes, node_name, res, x) {
+    nodes.forEach(function(node, i) {
+        if (($.inArray(node_name, node.targets) !== -1) && res.get(node.id) == undefined) {
+            node.x = x
+            node.y = coords[99-Math.abs(x)]
+            res.set(node.id, node)
+            min = Math.min(x, min)
+            getFrom(nodes, node.id, res, x-1)
+            coords[99-Math.abs(x)]++
         }
     });
-
-    return arr
 }
 
-function get_to(links, node_name, arr) {
-    links.forEach(function(l) {
-        if (l.source === node_name) {
-            arr.push(l)
-            if (l.target !== undefined) {
-                get_to(links, l.target, arr)
+/**
+* Computes recursively all target nodes from current node until last node in graph
+*/
+function getTo(nodes, node_name, res, x) {
+    var current_node = res.get(node_name)
+
+    current_node.targets.forEach(function(target, i) {
+        nodes.forEach(function(node, j) {
+            if ((node.id == target) && res.get(node.id) == undefined) {
+                node.x = x
+                node.y = coords[x]
+                res.set(node.id, node)
+                getTo(nodes, node.id, res, x+1)
+                coords[x]++
             }
-        }
+        });
     });
-
-    return arr
 }
 
-function get_nodes(nodes, links) {
-    var res = []
-    $.each(links, function(i, l) {
-        $.each(nodes, function(j, n) {
-            if ($.inArray(n, res) === -1 && (l.source === n.id || l.target === n.id)) {
-                res.push(n)
+/**
+* Creates links from nodes information
+*/
+function getLinks(nodes) {
+    var links = []
+    nodes.forEach(function(source, i) {
+        source.targets.forEach(function(target_id, j) {
+            var target = nodes.get(target_id)
+            if (target != undefined) {
+                links.push(createLink(source.x, source.y, target.x, target.y, target.type))
             }
         });
     });
 
-    return res
+    return links
 }
 
 </script>
