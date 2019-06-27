@@ -88,7 +88,7 @@ Node;KEEP;datastoreGetRecipeCommunity;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreGetReferenceDataAssociatedDomains;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreGetReferenceDataLabelDomainMarketLang;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreGetResourceInSearchVersion;Node;datastoreCrud;;;;;;;;;;;;;;;;;;;;
-Node;VALIDATE;datastoreGetSemanticImprovers;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
+Node;KEEP;datastoreGetSemanticImprovers;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
 Node;DELETE;datastoreGetUuidByFid;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreLogin;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreMembersByProfiles;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
@@ -524,3 +524,9 @@ Node;KEEP;uploadOnS4;Node;s4Medias;;;;;;;;;;;;;;;;;;;;
 Node;DELETE;userLearnt;Node;datastoreUserLearnt;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;variantIndexationAndSemantization;Node;crudIndexation;Node;semantizeRecipe;;;;;;;;;;;;;;;;;;
 Node;FIX;variantRecipe;Node;readRecipe;Node;adaptVariantRecipe;Node;crud;Node;syncRecipe;Node;semantizeRecipe;Node;readRecipe;Node;findOtherVariants;Node;adaptVariantRecipe;Node;datastoreRegenerateIds;Node;variantIndexationAndSemantization;Node;syncRecipe
+Entrypoint;KEEP;DELETE /profiles/{sourceSystem}/{functionalId}/accounts/{accountType};Node;updateDeleteAccount;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /clients/localizations;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /clients/localizations/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;POST /clients/localizations;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;PUT /clients/localizations/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;DELETE /clients/localizations/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
