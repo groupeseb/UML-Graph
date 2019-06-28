@@ -530,3 +530,10 @@ Entrypoint;KEEP;GET /clients/localizations/{functionalId};Exitpoint;datastore-se
 Entrypoint;KEEP;POST /clients/localizations;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
 Entrypoint;KEEP;PUT /clients/localizations/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
 Entrypoint;KEEP;DELETE /clients/localizations/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;POST /v2/clients;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /v2/clients/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /v2/clients;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;PUT /v2/clients/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /v2/configurations/{apikey};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;VALIDATE;POST /measures;Node;crud;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /v2/cmmfs/{cmmfKey};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
