@@ -130,37 +130,37 @@ GET /dump || /dump.json;TECH;;
 GET /mappings || /mappings.json;TECH;;
 GET /env/{name:.*};TECH;;
 GET /env || /env.json;TECH;;
-PUT /productReferences/{productReferenceId};;;
-POST /productReferences;;;
-PUT /products/{productId};;;
-GET /products/{productId}/profiles;;;
-GET /products/{productId}/profile/householder;;;
-PUT /products/serial;;;
-GET /{repository}/{id};;;
-PUT /{repository}/{id};;;
-OPTIONS /{repository};;;
-HEAD /{repository};;;
-GET /{repository};;;
-GET /{repository};;;
-POST /{repository};;;
-OPTIONS /{repository}/{id};;;
-HEAD /{repository}/{id};;;
-PATCH /{repository}/{id};;;
-DELETE /{repository}/{id};;;
-GET / || ;;;
-OPTIONS / || ;;;
-HEAD / || ;;;
-GET /{repository}/{id}/{property};;;
-GET /{repository}/{id}/{property}/{propertyId};;;
-DELETE /{repository}/{id}/{property};;;
-GET /{repository}/{id}/{property};;;
-PATCH || PUT || POST /{repository}/{id}/{property};;;
-DELETE /{repository}/{id}/{property}/{propertyId};;;
-GET /{repository}/schema;;;
-GET /{repository}/search/{search};;;
-HEAD /{repository}/search/{search};;;
-HEAD /{repository}/search;;;
-GET /{repository}/search;;;
-OPTIONS /{repository}/search/{search};;;
-OPTIONS /{repository}/search;;;
-GET /{repository}/search/{search};;;
+PUT /productReferences/{productReferenceId};KEEP;PUT /productReferences/{key};
+POST /productReferences;KEEP;POST /productReferences;
+PUT /products/{productId};KEEP;datastoreUpdateProductWithMarket;
+GET /products/{productId}/profiles;KEEP;datastoreProfilesByProduct;
+GET /products/{productId}/profile/householder;KEEP;RcuDatastoreRetrofitService.java;
+PUT /products/serial;KEEP;datastoreUniquenessSerialNumber;
+GET /{repository}/{id};KEEP;;Spring Data REST
+PUT /{repository}/{id};KEEP;;Spring Data REST
+OPTIONS /{repository};KEEP;;Spring Data REST
+HEAD /{repository};KEEP;;Spring Data REST
+GET /{repository};KEEP;;Spring Data REST
+GET /{repository};KEEP;;Spring Data REST
+POST /{repository};KEEP;;Spring Data REST
+OPTIONS /{repository}/{id};KEEP;;Spring Data REST
+HEAD /{repository}/{id};KEEP;;Spring Data REST
+PATCH /{repository}/{id};KEEP;;Spring Data REST
+DELETE /{repository}/{id};KEEP;;Spring Data REST
+GET / || ;KEEP;;Spring Data REST
+OPTIONS / || ;KEEP;;Spring Data REST
+HEAD / || ;KEEP;;Spring Data REST
+GET /{repository}/{id}/{property};KEEP;;Spring Data REST
+GET /{repository}/{id}/{property}/{propertyId};KEEP;;Spring Data REST
+DELETE /{repository}/{id}/{property};KEEP;;Spring Data REST
+GET /{repository}/{id}/{property};KEEP;;Spring Data REST
+PATCH || PUT || POST /{repository}/{id}/{property};KEEP;;Spring Data REST
+DELETE /{repository}/{id}/{property}/{propertyId};KEEP;;Spring Data REST
+GET /{repository}/schema;KEEP;;Spring Data REST
+GET /{repository}/search/{search};KEEP;;Spring Data REST
+HEAD /{repository}/search/{search};KEEP;;Spring Data REST
+HEAD /{repository}/search;KEEP;;Spring Data REST
+GET /{repository}/search;KEEP;;Spring Data REST
+OPTIONS /{repository}/search/{search};KEEP;;Spring Data REST
+OPTIONS /{repository}/search;KEEP;;Spring Data REST
+GET /{repository}/search/{search};KEEP;;Spring Data REST
