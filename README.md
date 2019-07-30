@@ -22,3 +22,16 @@ This is the generated file by Modelio.
 
 ### includes
 This folder contains _css_ stylesheet and _js_ libraries used by _index.html_.
+
+## How to run
+Modern browsers blocks CORS requests. In this case, _index.html_ is not allowed to load _routes.csv_ file.  
+To avoid that, we can run a local server to retrieve our local files.
+
+* Install **node.js** http-server: `npm install http-server -g`
+* Go to project root folder.
+* Run the server on folder _src_: `http-server ./src`
+
+By default this server uses port 8081. Any way, pay attention to the information showed when start.  
+Now, we can access to _index.html_ by the URL http://localhost:8081/index.html
+
+For further information see https://www.npmjs.com/package/http-server
