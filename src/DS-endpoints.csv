@@ -1,0 +1,166 @@
+DS endpoint;Status;Camel Route;Service
+POST /commentPlains/generate;KEEP;datastoreGenerateCommentPlain;
+PUT /packs/{packKey}/publish;KEEP;datastorePublishPack;
+GET /packs/{packKey}/binaries;KEEP;datastoreCrudBinary;
+POST /packs/{packKey}/binaries;KEEP;datastoreCrudBinary;
+PUT /packs/{packKey}/binaries/{binaryId}/publish;KEEP;datastorePublishBinary;
+DELETE /packs/{packKey}/binaries/{binaryId};KEEP;datastoreCrudBinary;
+POST /packs/{packKey}/archives;KEEP;;jsonator-service
+PUT /packs/{packKey}/archives/{archiveId}/publish;KEEP;datastorePublishArchive;
+DELETE /packs/{packKey}/archives/{archiveId};KEEP;datastoreDeleteArchive;jsonator-service
+POST /packs/unpublish;KEEP;datastoreUnpublishPack;
+GET /programs/getByApplianceGroup;KEEP;readProgramsByApplianceGroup;
+DELETE /profiles/{id}/accounts/{accountType};KEEP;datastoreUpdateDeleteAccount;
+POST /profiles/{id}/accounts;KEEP;datastoreUpdateDeleteAccount;
+PUT /profiles/{id}/accounts/{accountType};KEEP;datastoreUpdateDeleteAccount;
+GET /recipes/{id}/evaluations;KEEP;datastoreReadEvaluationByRecipeAndUser;
+POST /contents/copy;KEEP;datastoreCopyContents;
+GET /contents/{uid}/hierarchy;VALIDATE;datastoreGetContentTree;
+POST /contents/updateStatus;VALIDATE;datastoreUpdateContentTreeStatus;
+GET /alt/{domainTypeName}/{sourceSystem}/{functionalId};KEEP;TranscoderService.java;
+GET /recipePlains/search/findByFid;DELETE;;
+POST /recipePlains/search/findByFids;KEEP;datastoreFindRecipePlains;
+POST /recipePlains/generate;KEEP;datastoreGenerateRecipePlain;
+POST /{domainTypeName}/saveCollection;KEEP;datastoreBatch;
+POST /resources/search/{domainTypeName};KEEP;datastoreFindResources;
+GET /semanticImprovers/{topRecipeUid}/dashboard;KEEP;datastoreGetSemanticImprovers;
+PUT /ingredients/semanticImprovers/{id};KEEP;datastoreUpdateSemanticImprover;
+GET /transcodifications;DELETE;datastoreTranscodificationData;
+GET /transcodifications/search/findByDomainType;DELETE;getTranscodificationsByDomainType;
+GET /transcodifications/{domainType}/{key};DELETE;datastoreTranscodificationData;
+GET /clients/localizations;KEEP;GET /clients/localizations;
+GET /clients/localizations/{functionalId};KEEP;GET /clients/localizations/{functionalId};
+POST /clients/localizations;KEEP;POST /clients/localizations;
+PUT /clients/localizations/{functionalId};KEEP;PUT /clients/localizations/{functionalId};
+DELETE /clients/localizations/{functionalId};KEEP;DELETE /clients/localizations/{functionalId};
+PATCH /comments/batch;KEEP;datastoreBatch;
+DELETE /comments/batch;KEEP;datastoreBatch;
+GET /recipes/{id}/comments;KEEP;datastoreReadAll;
+GET /preferences/{preferenceId}/profiles;KEEP;datastoreProfilesByPreference;
+GET /synchronisation/{resourceType}/updated;KEEP;datastoreSynchronization;
+GET /synchronisation/{resourceType}/deleted;KEEP;datastoreSynchronization;
+GET /abacus/list/markets;KEEP;datastoreGetAbacusMarketsForDomain;
+GET /abacus/list;KEEP;datastoreGetAllAbacusByMarket;
+GET /abacus/search;KEEP;datastoreFindAbacusesByIdentifier;
+POST /maintenance/reloadAdditionalProperties;DELETE;;
+GET /maintenance/build || /version;KEEP;;
+GET /maintenance/logs;DELETE;;
+POST /moderations/recipes/{id};KEEP;datastoreRecipeModeration;
+GET /productReferencesHierarchy;KEEP;datastoreGetProductReferences;
+DELETE /productReferencesHierarchy;KEEP;datastoreDeleteProductReferences;
+PUT /rcuProfiles/{rcuAccountId};KEEP;datastoreEaiProfilesAsynchronous;
+PUT /rcuProfiles/{rcuAccountId}/anonymize;KEEP;datastoreEaiAnonymizeProfilesAsynchronous;
+POST /topRecipes/{topRecipeId}/variants;KEEP;datastoreUpdateVariantsStatus;
+GET /topRecipes/{topRecipeId}/binaries;KEEP;datastoreCrudBinary;
+POST /topRecipes/{topRecipeId}/binaries;KEEP;datastoreCrudBinary;
+PUT /topRecipes/{topRecipeId}/binaries/{binaryId}/publish;KEEP;datastorePublishBinary;
+DELETE /topRecipes/{topRecipeId}/binaries/{binaryId};KEEP;datastoreCrudBinary;
+GET /topRecipes/{topRecipeId}/community;DELETE;;
+POST /login;DELETE;datastoreProfileAuthentication;
+GET /places/{placeId}/profiles;KEEP;datastoreProfilesByPlace;
+DELETE /profiles/{id}/anonymize;KEEP;datastoreAnonymizeProfileByProfileUid;
+GET /profiles/{id}/household;KEEP;datastoreMembersByProfiles;
+POST /profiles/{id}/move;VALIDATE;datastoreMoveProfileToAnotherPerimeter;
+GET /profiles/exists;KEEP;AbstractJWTAuthenticationProvider.java;
+GET /alt/profiles/search/findByLogin;KEEP;datastoreFindAndClassifyProfile;
+DELETE /profiles/{id}/anonymizeFromBatch;KEEP;;profiles-anonymization-service
+GET /profiles/{id}/profileperimeter;KEEP;datastoreProfilePerimeterByProfileUid;
+GET /profiles/{id}/extended;KEEP;datastoreGetExtendedProfile;
+GET /profiles/rcu/{rcuAccountId}/accountId;DELETE;;
+GET /profiles/rcu/{rcuUserId}/userId;KEEP;datastoregetprofileByRcuUserId;
+GET /profiles/me;KEEP;datastoreGetAuthenticatedProfile;
+PUT /profiles/{id}/doubleOptin;DELETE;datastoreDoubleOptin;
+POST /profiles/{id}/products;KEEP;datastoreProductInProfile;
+GET /references;KEEP;readAllReferenceData;
+GET /references/associatedDomains/{resourceName};KEEP;datastoreGetOneReferenceDataAssociatedDomains;
+GET /references/associatedDomains;KEEP;datastoreGetReferenceDataAssociatedDomains;
+POST /references/associatedDomains/{resourceName};KEEP;dsCreateDomainForReferenceDataType;
+DELETE /references/associatedDomains/{resourceName};KEEP;dsCreateDomainForReferenceDataType;
+PUT /references/associatedDomains/{resourceName}/{id};KEEP;datastoreUpdateReferenceDataAssociatedDomains;
+POST /references/checkApplianceGroupDuplication;KEEP;datastoreCheckDuplication;
+POST /references/{resourceName}/orders;KEEP;updateOrdersRefData;
+GET /references/kitchenwares;KEEP;getKitchenwares;
+GET /references/refDataByLabelDomainMarketLang;KEEP;datastoreGetReferenceDataLabelDomainMarketLang;
+POST /clients;KEEP;POST /v2/clients;
+GET /clients;KEEP;GET /v2/clients;
+GET /clients/{functionalId};KEEP;GET /v2/clients/{functionalId};
+PUT /clients/{functionalId};KEEP;PUT /v2/clients/{functionalId};
+GET /configurations/{apikey};KEEP;GET /v2/configurations/{apikey};
+POST /households;KEEP;crudHousehold;
+GET /households/{householdUid}/members;KEEP;datastoreCrudHouseholdMembers;
+POST /households/{householdUid}/members;KEEP;datastoreCrudHouseholdMembers;
+PUT /households/{householdUid}/members;KEEP;datastoreCrudHouseholdMembers;
+DELETE /households/{householdUid}/members;KEEP;datastoreCrudHouseholdMembers;
+GET /households/{householdUid}/profiles;DELETE;;
+POST || PUT /measures;VALIDATE;POST /measures;
+POST /notificationTokens;KEEP;datastoreSaveNotificationToken;
+DELETE /notificationTokens/{token}/profiles/{sourceSystem}/{functionalId};KEEP;datastoreDeleteNotificationToken;
+DELETE /recipes/disable/{recipeId};KEEP;datastoreDeleteRecipe;
+POST /recipes/copy;KEEP;datastoreBatch;
+DELETE /recipes/disableAll/{recipeId};KEEP;datastoreDeleteRecipeAndVariants;
+GET /recipes/{recipeId}/community;KEEP;datastoreGetRecipeCommunity;
+POST /alt/recipes/{recipeId}/packs/{packKey};KEEP;datastoreRecipePackAssociation;
+DELETE /alt/recipes/{recipeId}/packs/{packKey};KEEP;datastoreRecipePackAssociation;
+POST /recipes/statuses;KEEP;datastoreBatch;
+POST /recipes/regenerateIds;KEEP;datastoreRegenerateIds;
+POST /recipes/duplicateApplianceGroup;KEEP;datastoreDuplicateApplianceGroup;
+GET /recipes/discovered;DELETE;;
+ /recipes/batch;DELETE;;
+GET /recipes/templates;KEEP;datastoreFindTemplateRecipes;
+GET /recipes/{recipeFid}/recipeType;DELETE;;
+POST /recipes/recomputeCommunityCollectionField;KEEP;;community-service
+GET /status;KEEP;;
+GET /cmmfs/{cmmfKey}/idcard;KEEP;GET /v2/cmmfs/{cmmfKey};
+POST /maintenance/reloadCache;KEEP;;
+POST /maintenance/referenceData/import;KEEP;;
+GET /maintenance/health;KEEP;;
+POST /maintenance/migrate;VALIDATE;;
+POST /maintenance/importRecipeFlat;VALIDATE;;
+POST /maintenance/importRecipeSync;VALIDATE;;
+GET || POST || PUT || DELETE || HEAD /profiles/{id}/collections;DELETE;;
+GET || POST || PUT || DELETE || HEAD /profiles/{id}/evaluations;KEEP;datastoreReadEvaluationByUserId;
+GET /profiles/{id}/evaluations/date;KEEP;datastoreReadEvaluationByUserAndDate;
+POST /profilesAndPlaces;KEEP;datastoreUpdateProfileWrapper;
+GET /beans || /beans.json;TECH;;
+GET /metrics/{name:.*};TECH;;
+GET /metrics || /metrics.json;TECH;;
+ /health || /health.json;TECH;;
+GET /info || /info.json;TECH;;
+GET /dump || /dump.json;TECH;;
+GET /mappings || /mappings.json;TECH;;
+GET /env/{name:.*};TECH;;
+GET /env || /env.json;TECH;;
+PUT /productReferences/{productReferenceId};KEEP;PUT /productReferences/{key};
+POST /productReferences;KEEP;POST /productReferences;
+PUT /products/{productId};KEEP;datastoreUpdateProductWithMarket;
+GET /products/{productId}/profiles;KEEP;datastoreProfilesByProduct;
+GET /products/{productId}/profile/householder;KEEP;RcuDatastoreRetrofitService.java;
+PUT /products/serial;KEEP;datastoreUniquenessSerialNumber;
+GET /{repository}/{id};KEEP;;Spring Data REST
+PUT /{repository}/{id};KEEP;;Spring Data REST
+OPTIONS /{repository};KEEP;;Spring Data REST
+HEAD /{repository};KEEP;;Spring Data REST
+GET /{repository};KEEP;;Spring Data REST
+GET /{repository};KEEP;;Spring Data REST
+POST /{repository};KEEP;;Spring Data REST
+OPTIONS /{repository}/{id};KEEP;;Spring Data REST
+HEAD /{repository}/{id};KEEP;;Spring Data REST
+PATCH /{repository}/{id};KEEP;;Spring Data REST
+DELETE /{repository}/{id};KEEP;;Spring Data REST
+GET / || ;KEEP;;Spring Data REST
+OPTIONS / || ;KEEP;;Spring Data REST
+HEAD / || ;KEEP;;Spring Data REST
+GET /{repository}/{id}/{property};KEEP;;Spring Data REST
+GET /{repository}/{id}/{property}/{propertyId};KEEP;;Spring Data REST
+DELETE /{repository}/{id}/{property};KEEP;;Spring Data REST
+GET /{repository}/{id}/{property};KEEP;;Spring Data REST
+PATCH || PUT || POST /{repository}/{id}/{property};KEEP;;Spring Data REST
+DELETE /{repository}/{id}/{property}/{propertyId};KEEP;;Spring Data REST
+GET /{repository}/schema;KEEP;;Spring Data REST
+GET /{repository}/search/{search};KEEP;;Spring Data REST
+HEAD /{repository}/search/{search};KEEP;;Spring Data REST
+HEAD /{repository}/search;KEEP;;Spring Data REST
+GET /{repository}/search;KEEP;;Spring Data REST
+OPTIONS /{repository}/search/{search};KEEP;;Spring Data REST
+OPTIONS /{repository}/search;KEEP;;Spring Data REST
+GET /{repository}/search/{search};KEEP;;Spring Data REST
