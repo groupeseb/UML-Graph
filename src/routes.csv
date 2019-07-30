@@ -1,9 +1,9 @@
 Type;Status;Name;Type;Name;Type;Name;Type;Name;Type;Name;Type;Name;Type;Name;Type;Name;Type;Name;Type;Name;Type;Name;Type;Name
 Entrypoint;KEEP;ACL Voter;Node;profilesUidByProduct;;;;;;;;;;;;;;;;;;;;
-Node;DELETE;adapterAdaptRecipe;Exitpoint;recipe-adapter-service;;;;;;;;;;;;;;;;;;;;
+Node;VALIDATE;adapterAdaptRecipe;Exitpoint;recipe-adapter-service;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;adapterCreateVariant;Exitpoint;recipe-adapter-service;;;;;;;;;;;;;;;;;;;;
 Node;DELETE;adapterRevertRecipeAdaptation;Exitpoint;recipe-adapter-service;;;;;;;;;;;;;;;;;;;;
-Node;DELETE;adaptRecipe;Node;adapterAdaptRecipe;;;;;;;;;;;;;;;;;;;;
+Node;VALIDATE;adaptRecipe;Node;adapterAdaptRecipe;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;adaptVariantRecipe;Node;adapterCreateVariant;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;anonymizeEaiAsynchronousProfiles;Node;datastoreEaiAnonymizeProfilesAsynchronous;Node;eaiProfileIndexation;;;;;;;;;;;;;;;;;;
 Node;KEEP;anonymizeProfile;Node;datastoreAnonymizeProfileByProfileUid;Node;indexCreateSimple;;;;;;;;;;;;;;;;;;
@@ -88,7 +88,7 @@ Node;KEEP;datastoreGetRecipeCommunity;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreGetReferenceDataAssociatedDomains;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreGetReferenceDataLabelDomainMarketLang;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreGetResourceInSearchVersion;Node;datastoreCrud;;;;;;;;;;;;;;;;;;;;
-Node;VALIDATE;datastoreGetSemanticImprovers;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
+Node;KEEP;datastoreGetSemanticImprovers;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
 Node;DELETE;datastoreGetUuidByFid;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreLogin;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;datastoreMembersByProfiles;Node;datastoreRoute;;;;;;;;;;;;;;;;;;;;
@@ -310,7 +310,7 @@ Entrypoint;KEEP;PATCH /comments/batch;Node;batchComments;Node;getRecipesByTopRec
 Node;KEEP;placeProfileIndexation;Node;profilesByPlace;Node;crudIndexation;;;;;;;;;;;;;;;;;;
 Entrypoint;KEEP;POST /{domainTypeName};Node;indexatorIndexMultipleResources;;;;;;;;;;;;;;;;;;;;
 Entrypoint;FIX;POST /accounts/{sourceSystem};Node;uniquenessSerialNumber;Node;findByEmailInPerimeter;Node;crudHousehold;Node;sendEmail;Node;updateDeleteAccount;Node;findHouseholdByProfileId;Node;doubleOptin;;;;;;;;
-Entrypoint;DELETE;POST /adaptation/adapt;Node;adaptRecipe;Node;readFood;;;;;;;;;;;;;;;;;;
+Entrypoint;VALIDATE;POST /adaptation/adapt;Node;adaptRecipe;Node;readFood;;;;;;;;;;;;;;;;;;
 Entrypoint;DELETE;POST /adaptation/revert/{sourceSystemKey}/{functionalId};Node;revertRecipeAdaptation;Node;readFood;;;;;;;;;;;;;;;;;;
 Entrypoint;DELETE;POST /admin/apiProSynchronisation;Node;toApiProSynchronisation;;;;;;;;;;;;;;;;;;;;
 Entrypoint;KEEP;POST /admin/comments/denormalize;Node;denormalizeComments;;;;;;;;;;;;;;;;;;;;
@@ -524,3 +524,17 @@ Node;KEEP;uploadOnS4;Node;s4Medias;;;;;;;;;;;;;;;;;;;;
 Node;DELETE;userLearnt;Node;datastoreUserLearnt;;;;;;;;;;;;;;;;;;;;
 Node;KEEP;variantIndexationAndSemantization;Node;crudIndexation;Node;semantizeRecipe;;;;;;;;;;;;;;;;;;
 Node;FIX;variantRecipe;Node;readRecipe;Node;adaptVariantRecipe;Node;crud;Node;syncRecipe;Node;semantizeRecipe;Node;readRecipe;Node;findOtherVariants;Node;adaptVariantRecipe;Node;datastoreRegenerateIds;Node;variantIndexationAndSemantization;Node;syncRecipe
+Entrypoint;KEEP;DELETE /profiles/{sourceSystem}/{functionalId}/accounts/{accountType};Node;updateDeleteAccount;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /clients/localizations;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /clients/localizations/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;POST /clients/localizations;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;PUT /clients/localizations/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;DELETE /clients/localizations/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;POST /v2/clients;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /v2/clients/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /v2/clients;Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;PUT /v2/clients/{functionalId};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /v2/configurations/{apikey};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;VALIDATE;POST /measures;Node;crud;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;GET /v2/cmmfs/{cmmfKey};Exitpoint;datastore-service;;;;;;;;;;;;;;;;;;;;
+Entrypoint;KEEP;POST /productReferences;Node;crud;;;;;;;;;;;;;;;;;;;;
