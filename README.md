@@ -31,7 +31,7 @@ To avoid that, we can run a local server to retrieve our local files.
 * Go to project root folder.
 * Run the server on folder _src_: `http-server ./src`
 
-By default this server uses port 8081. Any way, pay attention to the information showed when start.  
+By default this server uses port 8081. Anyway, pay attention to the information showed when start.  
 Now, we can access to _index.html_ by the URL http://localhost:8081/index.html
 
 For further information see https://www.npmjs.com/package/http-server
