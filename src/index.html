@@ -212,14 +212,14 @@ $(document).ready(function(){
                 if (entries.length > 1) {
                     // Fetch target nodes from current line
                     var targets = []
-                    for (var j=4; j<entries.length; j+=2) {
+                    for (var j=5; j<entries.length; j+=2) {
                         if (entries[j] !== "") {
                             targets.push(entries[j])
                         }
                     }
 
                     // Create node with line information and without coordinates
-                    graph.nodes.set(entries[2], createNode(entries[2], entries[0], targets, entries[1]))
+                    graph.nodes.set(entries[3], createNode(entries[3], entries[1], targets, entries[2]))
                 }
             }
 
