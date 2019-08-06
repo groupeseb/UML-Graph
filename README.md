@@ -20,6 +20,9 @@ the graph became unreadable. So, we decided to export the current work and find 
 ### machine-state-diagram.xmi
 This is the generated file by Modelio.
 
+## resources-by-domain.xlsx
+List of all existing resources grouped by domain.
+
 ### includes
 This folder contains _css_ stylesheet and _js_ libraries used by _index.html_.
 
